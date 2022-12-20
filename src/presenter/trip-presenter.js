@@ -1,4 +1,3 @@
-//import NewEventButtonView from './view/new-event-button-view.js';
 import SortView from '../view/sort-view.js';
 import EditView from '../view/edit-view.js';
 import FilterView from '../view/filter-view.js';
