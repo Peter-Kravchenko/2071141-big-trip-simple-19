@@ -6,7 +6,6 @@ import { humanizeDate } from '../utils.js';
 
 const createContentTemplate = (tripPoint) => {
   const {basePrice, destination, dateFrom, dateTo, type, pointOffer} = tripPoint;
-console.log(tripPoint);
   const destinationNameComponent = destinations.find((el) => (el.id === destination)).name;
   const pointOfferType = offer.filter((el) => (el.type === type));
   const descriptionComponent = destinations.find((el) => (el.id === destination)).description;
