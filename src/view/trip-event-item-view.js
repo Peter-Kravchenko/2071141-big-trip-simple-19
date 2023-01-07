@@ -1,4 +1,4 @@
-import { destinations, offer } from '../mock/point.js';
+import { destinations, offers } from '../mock/point.js';
 import { createElement } from '../render.js';
 import { humanizeHour, humanizeStartDate } from '../utils.js';
 
@@ -7,7 +7,7 @@ const createContentTemplate = (tripPoints) => {
   const {basePrice, destination, dateFrom, dateTo, type} = tripPoints;
 
   const destinationName = destinations.find((el) => (el.id === destination)).name;
-  const pointOfferType = offer.filter((el) => (el.type === type));
+  const pointOfferType = offers.filter((el) => (el.type === type));
 
   const selectedOffers = pointOfferType.map((el) => `<li class="event__offer">
       <span class="event__offer-title">${el.title}</span>

@@ -1,31 +1,31 @@
 import { DESTINATIONS, OFFER_TYPES } from '../const.js';
-import { destinations, offer } from '../mock/point.js';
+import { destinations, offers } from '../mock/point.js';
 import { createElement } from '../render.js';
 import { humanizeDate } from '../utils.js';
 
-
-const createContentTemplate = (tripPoint) => {
-  const {basePrice, destination, dateFrom, dateTo, type, pointOffer} = tripPoint;
-  const destinationNameComponent = destinations.find((el) => (el.id === destination)).name;
-  const pointOfferType = offer.filter((el) => (el.type === type));
-  const descriptionComponent = destinations.find((el) => (el.id === destination)).description;
-  const photoComponent = destinations.find((el) => (el.id === destination)).pictures[0].src;
-  const photoDescriptionComponent = destinations.find((el) => (el.id === destination)).pictures[0].description;
-
-  const createPhotosTemplate = () => photoComponent.map((picture) =>
-    `<img class="event__photo" src= "${picture}" alt="${photoDescriptionComponent}">`);
-
-  const createType = (currentType) => OFFER_TYPES.map((pointType) =>
-    `<div class="event__type-item">
+const createTypesTemplate = (currentType) => OFFER_TYPES.map((pointType) =>
+  `<div class="event__type-item">
    <input id="event-type-${pointType}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" ${currentType === 'checked'}>
    <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}">${pointType}</label>
    </div>`).join('');
 
-  const createDestinationNamesListTemplate = () => (
-    DESTINATIONS.map((name) =>
-      `<option value="${name}"></option>`));
+const createDestinationNamesListTemplate = () => (
+  DESTINATIONS.map((name) =>
+    `<option value="${name}"></option>`));
 
-  const destinationListComponent = createDestinationNamesListTemplate(destination);
+const createContentTemplate = (tripPoint) => {
+  const {basePrice, destination, dateFrom, dateTo, type, pointOffer} = tripPoint;
+  console.log(tripPoint);
+  const destinationNameComponent = destinations.find((el) => (el.id === destination)).name;
+  const pointOfferType = offers.filter((el) => (el.type === type));
+  const descriptionComponent = destinations.find((el) => (el.id === destination)).description;
+  const photoComponent = destinations.find((el) => (el.id === destination)).pictures[0].src;
+  const photoDescriptionComponent = destinations.find((el) => (el.id === destination)).pictures[0].description;
+
+  const destinationNamesListTemplate = createDestinationNamesListTemplate(destination);
+
+  const createPhotosTemplate = () => photoComponent.map((picture) =>
+    `<img class="event__photo" src= "${picture}" alt="${photoDescriptionComponent}">`);
 
   const tripPointOfferComponent = pointOfferType.map((el) => {
     const checked = (pointOffer === el.id ) ? 'checked' : '';
@@ -38,7 +38,7 @@ const createContentTemplate = (tripPoint) => {
               </div>`;
   });
 
-  const typeComponent = createType(type);
+  const typeComponent = createTypesTemplate(type);
 
   return (`<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -62,7 +62,7 @@ const createContentTemplate = (tripPoint) => {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="${destinationNameComponent}">
         <datalist id="destination-list-1">
-        ${destinationListComponent}
+        ${destinationNamesListTemplate}
         </datalist>
       </div>
       <div class="event__field-group  event__field-group--time">

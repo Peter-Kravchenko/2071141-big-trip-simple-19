@@ -1,21 +1,22 @@
 import { OFFERS, OFFER_TYPES} from '../const.js';
-import {getRandomInteger } from '../utils.js';
+import {getRandomInteger} from '../utils.js';
 
 const generateType = () => {
-  const types = OFFER_TYPES;
-  const typesIndex = getRandomInteger(0, types.length - 1);
-  return types[typesIndex];
+  const type = OFFER_TYPES;
+  const typesIndex = getRandomInteger(0, type.length - 1);
+//  console.log(type[typesIndex]);
+  return type[typesIndex];
 };
 
 const generateOffers = () => {
-  const offers = OFFERS;
-  const offerIndex = getRandomInteger(0, offers.length - 1);
-  return offers[offerIndex];
+  const offer = OFFERS;
+  const offerIndex = getRandomInteger(0, offer.length - 1);
+  return offer[offerIndex];
 };
 
 const generatePicture = () => `https://loremflickr.com/248/152?random=${getRandomInteger(0, 5000)}`;
 
-export const offer = [{
+export const offers = [{
   id: 1,
   type: generateType(),
   title: generateOffers(),
@@ -40,7 +41,7 @@ export const destinations = [{
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   name: 'Chamonix',
   pictures: [{
-    src: Array.from({length: 4}, generatePicture),
+    src: Array.from({length: getRandomInteger(0, 5)}, generatePicture),
     description: 'Beautiful Mountains'
   }]
 },
@@ -65,12 +66,12 @@ export const destinations = [{
 ];
 
 export const generatePoint = () => ({
-  'basePrice': getRandomInteger(100, 2000),
-  'dateFrom': '2019-07-10T22:55:56.845Z',
-  'dateTo': '2019-07-11T11:22:13.375Z',
-  'destination': getRandomInteger(1, 3),
-  'id': getRandomInteger(1, 5),
-  'offers': 400,
-  'type': generateType(),
+  basePrice: getRandomInteger(100, 2000),
+  dateFrom: '2019-07-10T22:55:56.845Z',
+  dateTo: '2019-07-11T11:22:13.375Z',
+  destination: getRandomInteger(1, 3),
+  id: getRandomInteger(1, 5),
+  offers: 400,
+  type: generateType(),
 }
 );
