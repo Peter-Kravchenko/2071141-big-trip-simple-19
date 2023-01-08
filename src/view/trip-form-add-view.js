@@ -1,9 +1,9 @@
-import { DESTINATIONS, OFFER_TYPES } from '../const.js';
-import { destinations, offers } from '../mock/point.js';
+import { OfferTypes } from '../const.js';
+import { DESTINATIONS, destinations, offers } from '../mock/point.js';
 import { createElement } from '../render.js';
 import { humanizeDate } from '../utils.js';
 
-const createTypesTemplate = (currentType) => OFFER_TYPES.map((pointType) =>
+const createTypesTemplate = (currentType) => Object.values(OfferTypes).map((pointType) =>
   `<div class="event__type-item">
    <input id="event-type-${pointType}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" ${currentType === 'checked'}>
    <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}">${pointType}</label>
@@ -15,7 +15,6 @@ const createDestinationNamesListTemplate = () => (
 
 const createContentTemplate = (tripPoint) => {
   const {basePrice, destination, dateFrom, dateTo, type, pointOffer} = tripPoint;
-  console.log(tripPoint);
   const destinationNameComponent = destinations.find((el) => (el.id === destination)).name;
   const pointOfferType = offers.filter((el) => (el.type === type));
   const descriptionComponent = destinations.find((el) => (el.id === destination)).description;

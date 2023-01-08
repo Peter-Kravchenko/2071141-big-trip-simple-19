@@ -1,10 +1,15 @@
-import { OFFERS, OFFER_TYPES} from '../const.js';
+import {OfferTypes} from '../const.js';
 import {getRandomInteger} from '../utils.js';
 
+const OFFERS = ['Add luggage', 'Choose seats', 'Add meal', 'Comfort class', 'Business class'];
+
+export const DESTINATIONS = ['Chamonix', 'Paris', 'London', 'Madrid', 'Geneva'];
+
+export const TRIP_POINT_COUNT = 5;
+
 const generateType = () => {
-  const type = OFFER_TYPES;
-  const typesIndex = getRandomInteger(0, type.length - 1);
-//  console.log(type[typesIndex]);
+  const type = Object.values(OfferTypes);
+  const typesIndex = getRandomInteger(0, type.length - 2);
   return type[typesIndex];
 };
 
@@ -65,7 +70,7 @@ export const destinations = [{
 }
 ];
 
-export const generatePoint = () => ({
+export const generateTripPoint = () => ({
   basePrice: getRandomInteger(100, 2000),
   dateFrom: '2019-07-10T22:55:56.845Z',
   dateTo: '2019-07-11T11:22:13.375Z',

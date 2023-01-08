@@ -18,11 +18,10 @@ export default class PointPresenter {
     render(this.filtersComponent, filtersContainer);
     render(this.sortFormComponent, mainContainer);
     render(this.tripListComponent, mainContainer);
-    render(new TripFormAddView(this.contentPoint[0]), this.tripListComponent.getElement());
+  //  render(new TripFormAddView(this.contentPoint[0]), this.tripListComponent.getElement());
 
-    for(let i = 0; i < this.contentPoint.length; i++) {
-      render(new TripEventItemView(this.contentPoint[i]), this.tripListComponent.getElement());
-    }
+    this.contentPoint.forEach((_, index) => {
+      render(new TripEventItemView(this.contentPoint[index]), this.tripListComponent.getElement());
+    });
   };
-
 }
