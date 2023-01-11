@@ -7,21 +7,28 @@ import FiltersFormView from '../view/filters-form-view.js';
 
 
 export default class PointPresenter {
-  filtersComponent = new FiltersFormView();
-  sortFormComponent = new SortFormView();
-  tripListComponent = new TripListView();
+  #filtersContainer = null;
+  #mainContainer = null;
+  #tripPoint = null;
+  #contentPoint = [];
+
+  #filtersComponent = new FiltersFormView();
+  #sortFormComponent = new SortFormView();
+  #tripListComponent = new TripListView();
 
   init = (filtersContainer, mainContainer, tripPointModel) => {
-    this.pointModel = tripPointModel;
-    this.contentPoint = [...this.pointModel.getPoints()];
+    this.#filtersContainer = filtersContainer;
+    this.#mainContainer = mainContainer;
+    this.#tripPoint = tripPointModel;
+    this.#contentPoint = [...this.#tripPoint.points];
 
-    render(this.filtersComponent, filtersContainer);
-    render(this.sortFormComponent, mainContainer);
-    render(this.tripListComponent, mainContainer);
-    render(new TripFormAddView(this.contentPoint[0]), this.tripListComponent.getElement());
+    render(this.#filtersComponent, this.#filtersContainer);
+    render(this.#sortFormComponent, this.#mainContainer);
+    render(this.#tripListComponent, this.#mainContainer);
+    render(new TripFormAddView(this.#contentPoint[0]), this.#tripListComponent.element);
 
-    this.contentPoint.forEach((_, index) => {
-      render(new TripEventItemView(this.contentPoint[index]), this.tripListComponent.getElement());
+    this.#contentPoint.forEach((_, index) => {
+      render(new TripEventItemView(this.#contentPoint[index]), this.#tripListComponent.element);
     });
   };
 }
