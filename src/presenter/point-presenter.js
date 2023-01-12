@@ -28,7 +28,13 @@ export default class PointPresenter {
     render(new TripFormAddView(this.#contentPoint[0]), this.#tripListComponent.element);
 
     this.#contentPoint.forEach((_, index) => {
-      render(new TripEventItemView(this.#contentPoint[index]), this.#tripListComponent.element);
+      this.#renderPoint(this.#contentPoint[index]);
     });
+  };
+
+
+  #renderPoint = (tripPoint) => {
+    const tripPointComponent = new TripEventItemView(tripPoint);
+    render (tripPointComponent, this.#tripListComponent.element);
   };
 }
