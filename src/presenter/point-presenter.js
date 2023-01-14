@@ -17,26 +17,11 @@ export default class PointPresenter {
   #sortFormComponent = new SortFormView();
   #tripListComponent = new TripListView();
 
-  init = (filtersContainer, mainContainer, tripPointModel) => {
+  constructor (filtersContainer, mainContainer, tripPointModel) {
     this.#filtersContainer = filtersContainer;
     this.#mainContainer = mainContainer;
     this.#tripPoint = tripPointModel;
-    this.#contentPoint = [...this.#tripPoint.points];
-
-    if (this.#contentPoint.length === 0) {
-      render (new NoPointsView(), this.#mainContainer);
-      return;
-    }
-
-    render(this.#filtersComponent, this.#filtersContainer);
-    render(this.#sortFormComponent, this.#mainContainer);
-    render(this.#tripListComponent, this.#mainContainer);
-
-    this.#contentPoint.forEach((_, index) => {
-      this.#renderPoint(this.#contentPoint[index]);
-    });
-  };
-
+  }
 
   #renderPoint = (tripPoint) => {
     const tripPointComponent = new TripEventItemView(tripPoint);
@@ -74,6 +59,26 @@ export default class PointPresenter {
     });
 
     render (tripPointComponent, this.#tripListComponent.element);
+  };
+
+  #renderContent = () =>{
+    if (this.#contentPoint.length === 0) {
+      render (new NoPointsView(), this.#mainContainer);
+      return;
+    }
+
+    render(this.#filtersComponent, this.#filtersContainer);
+    render(this.#sortFormComponent, this.#mainContainer);
+    render(this.#tripListComponent, this.#mainContainer);
+
+    this.#contentPoint.forEach((_, index) => {
+      this.#renderPoint(this.#contentPoint[index]);
+    });
+  };
+
+  init = () => {
+    this.#contentPoint = [...this.#tripPoint.points];
+    this.#renderContent();
   };
 
 }

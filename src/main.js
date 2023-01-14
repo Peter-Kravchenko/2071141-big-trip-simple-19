@@ -5,6 +5,6 @@ const siteFilterContainer = document.querySelector('.trip-controls');
 const siteContentContainer = document.querySelector('.trip-events');
 
 const tripPointModel = new TripsModel();
-const pointPresenter = new PointPresenter();
+const pointPresenter = new PointPresenter(siteFilterContainer, siteContentContainer, tripPointModel);
 
-pointPresenter.init(siteFilterContainer, siteContentContainer, tripPointModel);
+pointPresenter.init();
