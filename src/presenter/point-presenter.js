@@ -4,6 +4,7 @@ import TripEventItemView from '../view/trip-event-item-view.js';
 import TripListView from '../view/trip-list-view.js';
 import TripFormAddView from '../view/trip-form-add-view.js';
 import FiltersFormView from '../view/filters-form-view.js';
+import NoPointsView from '../view/no-points-view.js';
 
 
 export default class PointPresenter {
@@ -21,6 +22,11 @@ export default class PointPresenter {
     this.#mainContainer = mainContainer;
     this.#tripPoint = tripPointModel;
     this.#contentPoint = [...this.#tripPoint.points];
+
+    if (this.#contentPoint.length === 0) {
+      render (new NoPointsView(), this.#mainContainer);
+      return;
+    }
 
     render(this.#filtersComponent, this.#filtersContainer);
     render(this.#sortFormComponent, this.#mainContainer);

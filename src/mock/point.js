@@ -5,7 +5,7 @@ const OFFERS = ['Add luggage', 'Choose seats', 'Add meal', 'Comfort class', 'Bus
 
 export const DESTINATIONS = ['Chamonix', 'Paris', 'London', 'Madrid', 'Geneva'];
 
-export const TRIP_POINT_COUNT = 10;
+export const TRIP_POINT_COUNT = 20;
 
 const generateType = () => {
   const type = Object.values(OfferTypes);
