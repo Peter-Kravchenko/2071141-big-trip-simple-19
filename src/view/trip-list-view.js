@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view';
 
 
 const createContentTemplate = () => (
@@ -6,22 +6,10 @@ const createContentTemplate = () => (
   `
 );
 
-export default class TripListView {
-  #element = null;
+export default class TripListView extends AbstractView {
 
   get template() {
     return createContentTemplate();
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
 }
