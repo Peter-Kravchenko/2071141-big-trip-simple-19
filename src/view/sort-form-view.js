@@ -32,9 +32,7 @@ const createContentTemplate = () => (
 );
 
 export default class SortFormView extends AbstractView {
-
   get template() {
     return createContentTemplate();
   }
-
 }

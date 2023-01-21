@@ -5,9 +5,7 @@ const createContentTemplate = () => (
 );
 
 export default class NoPointsView extends AbstractView {
-
   get template() {
     return createContentTemplate();
   }
-
 }

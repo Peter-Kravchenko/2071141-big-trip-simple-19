@@ -17,9 +17,7 @@ const createContentTemplate = () => (
 );
 
 export default class FiltersFormView extends AbstractView {
-
   get template() {
     return createContentTemplate();
   }
-
 }
