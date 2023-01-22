@@ -71,9 +71,8 @@ export default class PointPresenter {
     render(this.#sortFormComponent, this.#mainContainer);
     render(this.#tripListComponent, this.#mainContainer);
 
-    this.#contentPoint.forEach((_, index) => {
-      this.#renderPoint(this.#contentPoint[index]);
-    });
+    this.#contentPoint.forEach ((point) => this.#renderPoint(point));
+
   };
 
   init = () => {
