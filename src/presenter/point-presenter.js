@@ -10,58 +10,61 @@ import NoPointsView from '../view/no-points-view.js';
 export default class PointPresenter {
   #filtersContainer = null;
   #mainContainer = null;
-  #tripPoint = null;
+  #tripPointModel = null;
   #contentPoint = [];
 
   #filtersComponent = new FiltersFormView();
   #sortFormComponent = new SortFormView();
   #tripListComponent = new TripListView();
 
-  constructor (filtersContainer, mainContainer, tripPointModel) {
+  constructor ({filtersContainer, mainContainer, tripPointModel}) {
     this.#filtersContainer = filtersContainer;
     this.#mainContainer = mainContainer;
-    this.#tripPoint = tripPointModel;
+    this.#tripPointModel = tripPointModel;
   }
 
-  #renderPoint = (tripPoint) => {
-    const tripPointComponent = new TripEventItemView(tripPoint);
-    const tripFormAddComponent = new TripFormAddView (tripPoint);
-
-    const replacePointToForm = () => {
-      this.#tripListComponent.element.replaceChild(tripFormAddComponent.element, tripPointComponent.element);
-    };
-
-    const replaceFormToPoint = () => {
-      this.#tripListComponent.element.replaceChild(tripPointComponent.element, tripFormAddComponent.element, );
-    };
+  #renderPoint = (point) => {
 
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
         evt.preventDefault();
-        replaceFormToPoint();
+        replaceFormToPoint().call(this);
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     };
 
-    tripPointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', ()=> {
-      replacePointToForm();
-      document.addEventListener('keydown', escKeyDownHandler);
+    const tripPointComponent = new TripEventItemView({
+      point,
+      onEditClick: () => {
+        replacePointToForm().call(this);
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
     });
 
-    tripFormAddComponent.element.querySelector('form').addEventListener('submit', (evt) =>{
-      evt.preventDefault();
-      replaceFormToPoint();
-      document.removeEventListener('keydown', escKeyDownHandler);
+    const tripFormAddComponent = new TripFormAddView ({
+      point,
+      onFormSubmit: () => {
+        replaceFormToPoint().call(this);
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onFormClose: () => {
+        replaceFormToPoint().call(this);
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
     });
 
-    tripFormAddComponent.element.querySelector('form').addEventListener('click', () =>{
-      replaceFormToPoint();
-    });
+    function replacePointToForm () {
+      this.#tripListComponent.element.replaceChild(tripFormAddComponent.element, tripPointComponent.element);
+    }
+
+    function replaceFormToPoint () {
+      this.#tripListComponent.element.replaceChild(tripPointComponent.element, tripFormAddComponent.element, );
+    }
 
     render (tripPointComponent, this.#tripListComponent.element);
   };
 
-  #renderContent = () =>{
+  #renderContent = () => {
     if (this.#contentPoint.length === 0) {
       render (new NoPointsView(), this.#mainContainer);
       return;
@@ -76,7 +79,7 @@ export default class PointPresenter {
   };
 
   init = () => {
-    this.#contentPoint = [...this.#tripPoint.points];
+    this.#contentPoint = [...this.#tripPointModel.points];
     this.#renderContent();
   };
 

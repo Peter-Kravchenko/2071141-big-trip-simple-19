@@ -7,8 +7,6 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-// const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
 const shuffleElements = (elements) => elements.sort(() => Math.random() - 0.5);
 
 const humanizeDate = (date) => dayjs(date).format('DD/MM/YY H:00');

@@ -107,13 +107,31 @@ const createContentTemplate = (tripPoint) => {
 
 export default class TripFormAddView extends AbstractView {
   #tripPoint = null;
+  #handleFormSubmit = null;
+  handleFormClose = null;
 
-  constructor(tripPoint) {
+  constructor({tripPoint, onFormSubmit, onFormClose}) {
     super();
     this.#tripPoint = tripPoint;
+    this.#handleFormSubmit = onFormSubmit;
+    this.handleFormClose = onFormClose;
+
+    this.element.querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#handleFormClose);
   }
 
   get template() {
     return createContentTemplate(this.#tripPoint);
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
+
+  #handleFormClose = () => {
+    this.handleFormClose();
+  };
 }
