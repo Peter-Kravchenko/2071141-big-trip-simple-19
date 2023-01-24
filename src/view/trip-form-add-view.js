@@ -1,7 +1,7 @@
 import { OfferTypes } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import { DESTINATIONS, destinations, offers } from '../mock/point.js';
-import { humanizeDate } from '../utils.js';
+import { humanizeDate } from '../utils/point-utils';
 
 const createTypesTemplate = (currentType) => Object.values(OfferTypes).map((pointType) =>
   `<div class="event__type-item">

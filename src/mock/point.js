@@ -1,11 +1,11 @@
-import {OfferTypes} from '../const.js';
-import {getRandomInteger} from '../utils.js';
+import { OfferTypes } from '../const.js';
+import { getRandomInteger } from '../utils/common.js';
 
 const OFFERS = ['Add luggage', 'Choose seats', 'Add meal', 'Comfort class', 'Business class'];
 
 export const DESTINATIONS = ['Chamonix', 'Paris', 'London', 'Madrid', 'Geneva'];
 
-export const TRIP_POINT_COUNT = 20;
+const TRIP_POINT_COUNT = 20;
 
 const generateType = () => {
   const type = Object.values(OfferTypes);
@@ -80,3 +80,5 @@ export const generateTripPoint = () => ({
   type: generateType(),
 }
 );
+
+export const getPoints = () => Array.from({length: TRIP_POINT_COUNT }, generateTripPoint);

@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { destinations, offers } from '../mock/point.js';
-import { humanizeHour, humanizeStartDate } from '../utils.js';
+import { humanizeHour, humanizeStartDate } from '../utils/point-utils';
 
 
 const createContentTemplate = (tripPoint) => {

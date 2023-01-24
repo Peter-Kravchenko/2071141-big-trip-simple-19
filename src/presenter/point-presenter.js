@@ -1,4 +1,4 @@
-import {render, replace} from '../framework/render.js';
+import { render } from '../framework/render.js';
 import SortFormView from '../view/sort-form-view.js';
 import TripEventItemView from '../view/trip-event-item-view.js';
 import TripListView from '../view/trip-list-view.js';
@@ -11,7 +11,7 @@ export default class PointPresenter {
   #filtersContainer = null;
   #mainContainer = null;
   #tripPointModel = null;
-  #contentPoint = [];
+  #contentPoints = [];
 
   #filtersComponent = new FiltersFormView();
   #sortFormComponent = new SortFormView();
@@ -24,12 +24,12 @@ export default class PointPresenter {
   }
 
   init = () => {
-    this.#contentPoint = [...this.#tripPointModel.points];
+    this.#contentPoints = [...this.#tripPointModel.points];
     this.#renderContent();
   };
 
   #renderContent = () => {
-    if (this.#contentPoint.length === 0) {
+    if (this.#contentPoints.length === 0) {
       render (new NoPointsView(), this.#mainContainer);
       return;
     }
@@ -38,7 +38,7 @@ export default class PointPresenter {
     render(this.#sortFormComponent, this.#mainContainer);
     render(this.#tripListComponent, this.#mainContainer);
 
-    this.#contentPoint.forEach ((tripPoint) => this.#renderPoint(tripPoint));
+    this.#contentPoints.forEach(this.#renderPoint);
 
   };
 
@@ -71,11 +71,11 @@ export default class PointPresenter {
         },});
 
     function replacePointToForm () {
-      replace(tripFormAddComponent, tripPointComponent);
+      this.#tripListComponent.element.replaceChild(tripFormAddComponent.element, tripPointComponent.element);
     }
 
     function replaceFormToPoint () {
-      replace(tripPointComponent, tripFormAddComponent);
+      this.#tripListComponent.element.replaceChild(tripPointComponent.element, tripFormAddComponent.element);
     }
 
     render (tripPointComponent, this.#tripListComponent.element);
