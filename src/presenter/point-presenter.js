@@ -1,4 +1,4 @@
-import {render} from '../framework/render.js';
+import {render, replace} from '../framework/render.js';
 import SortFormView from '../view/sort-form-view.js';
 import TripEventItemView from '../view/trip-event-item-view.js';
 import TripListView from '../view/trip-list-view.js';
@@ -23,45 +23,9 @@ export default class PointPresenter {
     this.#tripPointModel = tripPointModel;
   }
 
-  #renderPoint = (point) => {
-
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToPoint().call(this);
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const tripPointComponent = new TripEventItemView({
-      point,
-      onEditClick: () => {
-        replacePointToForm().call(this);
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    const tripFormAddComponent = new TripFormAddView ({
-      point,
-      onFormSubmit: () => {
-        replaceFormToPoint().call(this);
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      onFormClose: () => {
-        replaceFormToPoint().call(this);
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-    });
-
-    function replacePointToForm () {
-      this.#tripListComponent.element.replaceChild(tripFormAddComponent.element, tripPointComponent.element);
-    }
-
-    function replaceFormToPoint () {
-      this.#tripListComponent.element.replaceChild(tripPointComponent.element, tripFormAddComponent.element, );
-    }
-
-    render (tripPointComponent, this.#tripListComponent.element);
+  init = () => {
+    this.#contentPoint = [...this.#tripPointModel.points];
+    this.#renderContent();
   };
 
   #renderContent = () => {
@@ -74,13 +38,47 @@ export default class PointPresenter {
     render(this.#sortFormComponent, this.#mainContainer);
     render(this.#tripListComponent, this.#mainContainer);
 
-    this.#contentPoint.forEach ((point) => this.#renderPoint(point));
+    this.#contentPoint.forEach ((tripPoint) => this.#renderPoint(tripPoint));
 
   };
 
-  init = () => {
-    this.#contentPoint = [...this.#tripPointModel.points];
-    this.#renderContent();
+  #renderPoint = (tripPoint) => {
+
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceFormToPoint.call(this);
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    const tripPointComponent = new TripEventItemView(
+      {tripPoint,
+        onEditClick: () => {
+          replacePointToForm.call(this);
+          document.addEventListener('keydown', escKeyDownHandler);
+        }});
+
+    const tripFormAddComponent = new TripFormAddView (
+      {tripPoint,
+        onFormSubmit: () => {
+          replaceFormToPoint.call(this);
+          document.removeEventListener('keydown', escKeyDownHandler);
+        },
+        onFormClose: () => {
+          replaceFormToPoint.call(this);
+          document.removeEventListener('keydown', escKeyDownHandler);
+        },});
+
+    function replacePointToForm () {
+      replace(tripFormAddComponent, tripPointComponent);
+    }
+
+    function replaceFormToPoint () {
+      replace(tripPointComponent, tripFormAddComponent);
+    }
+
+    render (tripPointComponent, this.#tripListComponent.element);
   };
 
 }

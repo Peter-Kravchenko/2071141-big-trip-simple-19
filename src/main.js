@@ -6,8 +6,8 @@ const siteContentElement = document.querySelector('.trip-events');
 
 const tripPointModel = new TripPointModel();
 const pointPresenter = new PointPresenter({
-  siteFilterContainer: siteFilterElement,
-  siteContentContainer: siteContentElement,
+  filtersContainer: siteFilterElement,
+  mainContainer: siteContentElement,
   tripPointModel});
 
 pointPresenter.init();
