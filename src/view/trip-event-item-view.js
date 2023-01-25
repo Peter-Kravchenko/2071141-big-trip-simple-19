@@ -1,10 +1,10 @@
+import AbstractView from '../framework/view/abstract-view.js';
 import { destinations, offers } from '../mock/point.js';
-import { createElement } from '../render.js';
-import { humanizeHour, humanizeStartDate } from '../utils.js';
+import { humanizeHour, humanizeStartDate } from '../utils/point-utils';
 
 
-const createContentTemplate = (tripPoints) => {
-  const {basePrice, destination, dateFrom, dateTo, type} = tripPoints;
+const createContentTemplate = (tripPoint) => {
+  const {basePrice, destination, dateFrom, dateTo, type} = tripPoint;
 
   const destinationName = destinations.find((el) => (el.id === destination)).name;
   const pointOfferType = offers.filter((el) => (el.type === type));
@@ -45,27 +45,24 @@ const createContentTemplate = (tripPoints) => {
     `);
 };
 
-export default class TripEventItemView {
-  #element = null;
+export default class TripEventItemView extends AbstractView {
   #tripPoint = null;
+  #handleEditClick = null;
 
-  constructor(tripPoint) {
+  constructor({tripPoint, onEditClick}) {
+    super();
     this.#tripPoint = tripPoint;
+    this.#handleEditClick = onEditClick;
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#editClickHendler);
   }
 
   get template() {
     return createContentTemplate(this.#tripPoint);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #editClickHendler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }

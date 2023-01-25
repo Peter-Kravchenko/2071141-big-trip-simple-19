@@ -1,7 +1,7 @@
 import { OfferTypes } from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { DESTINATIONS, destinations, offers } from '../mock/point.js';
-import { createElement } from '../render.js';
-import { humanizeDate } from '../utils.js';
+import { humanizeDate } from '../utils/point-utils';
 
 const createTypesTemplate = (currentType) => Object.values(OfferTypes).map((pointType) =>
   `<div class="event__type-item">
@@ -105,27 +105,33 @@ const createContentTemplate = (tripPoint) => {
 </li>`);
 };
 
-export default class TripFormAddView {
-  #element = null;
+export default class TripFormAddView extends AbstractView {
   #tripPoint = null;
+  #handleFormSubmit = null;
+  handleFormClose = null;
 
-  constructor(tripPoint) {
+  constructor({tripPoint, onFormSubmit, onFormClose}) {
+    super();
     this.#tripPoint = tripPoint;
+    this.#handleFormSubmit = onFormSubmit;
+    this.handleFormClose = onFormClose;
+
+    this.element.querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#handleFormClose);
   }
 
   get template() {
     return createContentTemplate(this.#tripPoint);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #handleFormClose = () => {
+    this.handleFormClose();
+  };
 }
