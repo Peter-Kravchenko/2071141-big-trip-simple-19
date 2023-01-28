@@ -140,7 +140,7 @@ const createContentTemplate = () => (
   `
 );
 
-export default class TripFormEditView extends AbstractView {
+export default class TripPointEditView extends AbstractView {
   get template() {
     return createContentTemplate();
   }

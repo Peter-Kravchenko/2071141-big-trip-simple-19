@@ -27,19 +27,19 @@ export default class PointPresenter {
     this.#renderContent();
   };
 
-  #renderPoint = (tripPoint) => {
-    const tripPointPresenter = new TripPointPresenter({
-      pointsListContainer: this.#tripListComponent.element,
-    });
-    tripPointPresenter.init(tripPoint);
-  };
-
   #renderFilter = () => {
     render(this.#filtersComponent, this.#filtersContainer);
   };
 
   #renderSort = () => {
     render(this.#sortFormComponent, this.#mainContainer);
+  };
+
+  #renderPoint = (tripPoint) => {
+    const tripPointPresenter = new TripPointPresenter({
+      pointsListContainer: this.#tripListComponent.element,
+    });
+    tripPointPresenter.init(tripPoint);
   };
 
   #renderPoints = () => {

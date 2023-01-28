@@ -1,12 +1,12 @@
 import { render, replace } from '../framework/render.js';
 import TripEventItemView from '../view/trip-event-item-view.js';
-import TripFormAddView from '../view/trip-form-add-view.js';
+import TripPointEditView from '../view/trip-point-edit-view.js';
 
 export default class TripPointPresenter {
   #pointsListContainer = null;
 
   #tripPointComponent = null;
-  #tripFormAddComponent = null; //cahnge 2 tripPiontEdit
+  #tripPointEditComponent = null;
 
   #tripPoint = null;
 
@@ -22,7 +22,7 @@ export default class TripPointPresenter {
         onEditClick: this.#handleEditClick,
       });
 
-    this.#tripFormAddComponent = new TripFormAddView (
+    this.#tripPointEditComponent = new TripPointEditView (
       {tripPoint: this.#tripPoint,
         onFormSubmit: this.#handleFormSubmit,
         onFormClose: this.#handleFormSubmit,
@@ -32,12 +32,12 @@ export default class TripPointPresenter {
   }
 
   #replacePointToForm () {
-    replace(this.#tripFormAddComponent, this.#tripPointComponent);
+    replace(this.#tripPointEditComponent, this.#tripPointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   #replaceFormToPoint () {
-    replace(this.#tripPointComponent, this.#tripFormAddComponent);
+    replace(this.#tripPointComponent, this.#tripPointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
