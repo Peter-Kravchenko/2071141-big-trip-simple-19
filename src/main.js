@@ -1,6 +1,6 @@
 import { getPoints } from './mock/point.js';
 import TripPointModel from './model/trip-point-model.js';
-import PointPresenter from './presenter/point-presenter.js';
+import PointPresenter from './presenter/content-presenter.js';
 
 
 const siteFilterElement = document.querySelector('.trip-controls');

@@ -1,9 +1,8 @@
-import { render, replace } from '../framework/render.js';
-import SortFormView from '../view/sort-form-view.js';
-import TripEventItemView from '../view/trip-event-item-view.js';
-import TripListView from '../view/trip-list-view.js';
-import TripFormAddView from '../view/trip-form-add-view.js';
+import { render } from '../framework/render.js';
 import FiltersFormView from '../view/filters-form-view.js';
+import TripPointPresenter from './trip-point-presenter.js';
+import SortFormView from '../view/sort-form-view.js';
+import TripListView from '../view/trip-list-view.js';
 import NoPointsView from '../view/no-points-view.js';
 
 
@@ -29,42 +28,10 @@ export default class PointPresenter {
   };
 
   #renderPoint = (tripPoint) => {
-
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToPoint.call(this);
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const tripPointComponent = new TripEventItemView(
-      {tripPoint,
-        onEditClick: () => {
-          replacePointToForm.call(this);
-          document.addEventListener('keydown', escKeyDownHandler);
-        }});
-
-    const tripFormAddComponent = new TripFormAddView (
-      {tripPoint,
-        onFormSubmit: () => {
-          replaceFormToPoint.call(this);
-          document.removeEventListener('keydown', escKeyDownHandler);
-        },
-        onFormClose: () => {
-          replaceFormToPoint.call(this);
-          document.removeEventListener('keydown', escKeyDownHandler);
-        },});
-
-    function replacePointToForm () {
-      replace(tripFormAddComponent, tripPointComponent);
-    }
-
-    function replaceFormToPoint () {
-      replace(tripPointComponent, tripFormAddComponent);
-    }
-
-    render (tripPointComponent, this.#tripListComponent.element);
+    const tripPointPresenter = new TripPointPresenter({
+      pointsListContainer: this.#tripListComponent.element,
+    });
+    tripPointPresenter.init(tripPoint);
   };
 
   #renderFilter = () => {
