@@ -1,4 +1,4 @@
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 import SortFormView from '../view/sort-form-view.js';
 import TripEventItemView from '../view/trip-event-item-view.js';
 import TripListView from '../view/trip-list-view.js';
@@ -12,7 +12,7 @@ export default class PointPresenter {
   #mainContainer = null;
   #tripPointModel = null;
   #contentPoints = [];
-
+  #noPointComponent = new NoPointsView();
   #filtersComponent = new FiltersFormView();
   #sortFormComponent = new SortFormView();
   #tripListComponent = new TripListView();
@@ -26,20 +26,6 @@ export default class PointPresenter {
   init = () => {
     this.#contentPoints = [...this.#tripPointModel.points];
     this.#renderContent();
-  };
-
-  #renderContent = () => {
-    if (this.#contentPoints.length === 0) {
-      render (new NoPointsView(), this.#mainContainer);
-      return;
-    }
-
-    render(this.#filtersComponent, this.#filtersContainer);
-    render(this.#sortFormComponent, this.#mainContainer);
-    render(this.#tripListComponent, this.#mainContainer);
-
-    this.#contentPoints.forEach(this.#renderPoint);
-
   };
 
   #renderPoint = (tripPoint) => {
@@ -71,14 +57,47 @@ export default class PointPresenter {
         },});
 
     function replacePointToForm () {
-      this.#tripListComponent.element.replaceChild(tripFormAddComponent.element, tripPointComponent.element);
+      replace(tripFormAddComponent, tripPointComponent);
     }
 
     function replaceFormToPoint () {
-      this.#tripListComponent.element.replaceChild(tripPointComponent.element, tripFormAddComponent.element);
+      replace(tripPointComponent, tripFormAddComponent);
     }
 
     render (tripPointComponent, this.#tripListComponent.element);
+  };
+
+  #renderFilter = () => {
+    render(this.#filtersComponent, this.#filtersContainer);
+  };
+
+  #renderSort = () => {
+    render(this.#sortFormComponent, this.#mainContainer);
+  };
+
+  #renderPoints = () => {
+    this.#contentPoints.forEach(this.#renderPoint);
+  };
+
+  #renderPointsList = () => {
+    render(this.#tripListComponent, this.#mainContainer);
+    this.#renderPoints();
+  };
+
+  #renderNoPoints = () => {
+    render (this.#noPointComponent, this.#mainContainer);
+  };
+
+  #renderContent = () => {
+    if (this.#contentPoints.length === 0) {
+      this.#renderNoPoints();
+      return;
+    }
+
+    this.#renderFilter();
+    this.#renderSort();
+    this.#renderPointsList();
+
   };
 
 }
