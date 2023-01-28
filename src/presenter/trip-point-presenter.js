@@ -1,4 +1,4 @@
-import { render, replace } from '../framework/render.js';
+import { render, replace, remove } from '../framework/render.js';
 import TripEventItemView from '../view/trip-event-item-view.js';
 import TripPointEditView from '../view/trip-point-edit-view.js';
 
@@ -17,6 +17,9 @@ export default class TripPointPresenter {
   init(tripPoint) {
     this.#tripPoint = tripPoint;
 
+    const prevTripPointComponent = this.#tripPointComponent;
+    const prevTripPointEditComponent = this.#tripPointEditComponent;
+
     this.#tripPointComponent = new TripEventItemView(
       {tripPoint: this.#tripPoint,
         onEditClick: this.#handleEditClick,
@@ -28,7 +31,26 @@ export default class TripPointPresenter {
         onFormClose: this.#handleFormSubmit,
       });
 
-    render (this.#tripPointComponent, this.#pointsListContainer);
+    if (prevTripPointComponent === null || prevTripPointEditComponent === null) {
+      render (this.#tripPointComponent, this.#pointsListContainer);
+      return;
+    }
+
+    if (this.#pointsListContainer.contains(prevTripPointComponent.element)) {
+      replace(this.#tripPointComponent, prevTripPointComponent);
+    }
+
+    if (this.#pointsListContainer.contains(prevTripPointEditComponent.element)) {
+      replace(this.#tripPointEditComponent, prevTripPointEditComponent);
+    }
+
+    remove(prevTripPointComponent);
+    remove(prevTripPointEditComponent);
+  }
+
+  destroy() {
+    remove(this.#tripPointComponent);
+    remove(this.#tripPointEditComponent);
   }
 
   #replacePointToForm () {
