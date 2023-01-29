@@ -105,7 +105,7 @@ const createContentTemplate = (tripPoint) => {
 </li>`);
 };
 
-export default class TripFormAddView extends AbstractView {
+export default class TripPointEditView extends AbstractView {
   #tripPoint = null;
   #handleFormSubmit = null;
   handleFormClose = null;
@@ -128,10 +128,11 @@ export default class TripFormAddView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#tripPoint);
   };
 
-  #handleFormClose = () => {
+  #handleFormClose = (evt) => {
+    evt.preventDefault();
     this.handleFormClose();
   };
 }
