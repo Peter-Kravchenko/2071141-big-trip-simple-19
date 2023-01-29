@@ -33,13 +33,13 @@ export default class TripPointPresenter {
 
     this.#tripPointComponent = new TripEventItemView(
       {tripPoint: this.#tripPoint,
-        onEditClick: this.#handleEditClick.bind(this),
+        onEditClick: this.#handleEditClick,
       });
 
     this.#tripPointEditComponent = new TripPointEditView (
       {tripPoint: this.#tripPoint,
-        onFormSubmit: this.#handleFormSubmit.bind(this),
-        onFormClose: this.#handleFormSubmit.bind(this),
+        onFormSubmit: this.#handleFormSubmit,
+        onFormClose: this.#handleFormSubmit,
       });
 
     if (prevTripPointComponent === null || prevTripPointEditComponent === null) {

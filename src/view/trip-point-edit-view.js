@@ -131,8 +131,7 @@ export default class TripPointEditView extends AbstractView {
     this.#handleFormSubmit(this.#tripPoint);
   };
 
-  #handleFormClose = (evt) => {
-    evt.preventDefault();
-    this.handleFormClose();
+  #handleFormClose = () => {
+    this.handleFormClose(this.#tripPoint);
   };
 }
