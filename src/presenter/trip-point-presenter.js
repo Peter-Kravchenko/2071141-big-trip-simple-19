@@ -2,16 +2,27 @@ import { render, replace, remove } from '../framework/render.js';
 import TripEventItemView from '../view/trip-event-item-view.js';
 import TripPointEditView from '../view/trip-point-edit-view.js';
 
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDIT: 'EDIT',
+};
+
 export default class TripPointPresenter {
   #pointsListContainer = null;
+  #handleDataChange = null;
+  #handleModeChange = null;
 
   #tripPointComponent = null;
   #tripPointEditComponent = null;
 
   #tripPoint = null;
+  #mode = Mode.DEFAULT;
 
-  constructor({pointsListContainer}) {
+  constructor({pointsListContainer, onDataChange, onModeChange}) {
     this.#pointsListContainer = pointsListContainer;
+    this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
   }
 
   init(tripPoint) {
@@ -22,13 +33,13 @@ export default class TripPointPresenter {
 
     this.#tripPointComponent = new TripEventItemView(
       {tripPoint: this.#tripPoint,
-        onEditClick: this.#handleEditClick,
+        onEditClick: this.#handleEditClick.bind(this),
       });
 
     this.#tripPointEditComponent = new TripPointEditView (
       {tripPoint: this.#tripPoint,
-        onFormSubmit: this.#handleFormSubmit,
-        onFormClose: this.#handleFormSubmit,
+        onFormSubmit: this.#handleFormSubmit.bind(this),
+        onFormClose: this.#handleFormSubmit.bind(this),
       });
 
     if (prevTripPointComponent === null || prevTripPointEditComponent === null) {
@@ -36,11 +47,11 @@ export default class TripPointPresenter {
       return;
     }
 
-    if (this.#pointsListContainer.contains(prevTripPointComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#tripPointComponent, prevTripPointComponent);
     }
 
-    if (this.#pointsListContainer.contains(prevTripPointEditComponent.element)) {
+    if (this.#mode === Mode.EDIT) {
       replace(this.#tripPointEditComponent, prevTripPointEditComponent);
     }
 
@@ -53,14 +64,23 @@ export default class TripPointPresenter {
     remove(this.#tripPointEditComponent);
   }
 
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToPoint();
+    }
+  }
+
   #replacePointToForm () {
     replace(this.#tripPointEditComponent, this.#tripPointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#handleModeChange();
+    this.#mode = Mode.EDIT;
   }
 
   #replaceFormToPoint () {
     replace(this.#tripPointComponent, this.#tripPointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
   }
 
   #escKeyDownHandler = (evt) => {
@@ -74,7 +94,8 @@ export default class TripPointPresenter {
     this.#replacePointToForm();
   };
 
-  #handleFormSubmit = () => {
+  #handleFormSubmit = (tripPoint) => {
+    this.#handleDataChange(tripPoint);
     this.#replaceFormToPoint();
   };
 

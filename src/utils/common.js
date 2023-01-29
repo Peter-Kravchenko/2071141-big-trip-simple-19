@@ -7,4 +7,8 @@ const getRandomInteger = (a = 0, b = 1) => {
 
 const shuffleElements = (elements) => elements.sort(() => Math.random() - 0.5);
 
-export {getRandomInteger, shuffleElements};
+const updateItem = (items, update) => {
+  items.map((item) => item.id === update.id ? update : item);
+};
+
+export {getRandomInteger, shuffleElements, updateItem};
