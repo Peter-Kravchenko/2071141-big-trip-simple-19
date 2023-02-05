@@ -10,7 +10,7 @@ const generateDate = () => {
   const year = getRandomInteger(2020, 2024);
 
   const dateFrom = new Date(year, month, day, hour, min);
-  const dateTo = new Date(year, month, day, hour, min);
+  const dateTo = new Date(year + 1, month + 2, day + 2, hour + 2, min + 5);
 
   return {dateFrom, dateTo};
 };

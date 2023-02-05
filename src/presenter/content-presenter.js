@@ -30,6 +30,10 @@ export default class ContentPresenter {
     this.#renderContent();
   };
 
+  get points() {
+    return this.#tripPointModel.points;
+  }
+
   #renderFilter = () => {
     render(this.#filtersComponent, this.#filtersContainer);
   };
