@@ -16,8 +16,8 @@ const createContentTemplate = (tripPoint) => {
   const {basePrice, destination, dateFrom, dateTo, type, offers} = tripPoint;
   //console.log(offers);
   //console.log(type);
-  // console.log(tripPoint);
-  //console.log(destinations);
+  //console.log(tripPoint);
+  // console.log(destinations);
 
   const createDestinationNamesListTemplate = (selectedCity) => `
 <label class="event__label  event__type-output" for="event-destination-1">
@@ -113,44 +113,91 @@ const createContentTemplate = (tripPoint) => {
 
 export default class TripPointEditView extends AbstractStatefulView {
   #tripPoint = null;
+  #offers = null;
+  #destination = null;
   #handleFormSubmit = null;
   handleFormClose = null;
 
-  constructor({tripPoint, onFormSubmit, onFormClose}) {
+  constructor({tripPoint, offers, destination, onFormSubmit, onFormClose}) {
     super();
     this._setState(TripPointEditView.parsePointToState(tripPoint));
     this.#handleFormSubmit = onFormSubmit;
     this.handleFormClose = onFormClose;
-
+    this.#offers = offers;
+    this.#destination = destinations.find((item) => destination === item.id);
     this._restoreHandlers();
-  }
-
-  _restoreHandlers() {
-
-    this.element.querySelector('form')
-      .addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#handleFormClose);
-
-    this.element.querySelector('.event__type-group')
-      .addEventListener('cahnge', this.#eventTypeChangeHandler);
-
-    this.element.querySelector('.event__field-group--destination')
-      .addEventListener('change', this.#eventDestinationChangeHandler);
   }
 
   get template() {
     return createContentTemplate(this._state);
   }
 
+  _restoreHandlers() {
+    this.element.querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#handleFormClose);
+    this.element.querySelector('.event__reset-btn')
+      .addEventListener('click', this.#handleFormClose);
+    this.element.querySelector('.event__available-offers')
+      .addEventListener('change', this.#offerChangeHandler);
+    this.element.querySelector('.event__input--price')
+      .addEventListener('input', this.#priceInputHandler);
+    this.element.querySelector('.event__type-group')
+      .addEventListener('change', this.#pointTypeChangeHandler);
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('change', this.#destinationChangeHandler);
+
+    // this.#setDatepicker();
+  }
+
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.EditFormView.parseStateToPoint(this._state));
+    this.#handleFormSubmit(TripPointEditView.parseStateToPoint(this._state), this.#offers, this.#destination);
   };
 
   #handleFormClose = () => {
     this.handleFormClose(this.#tripPoint);
-  }; //ошибка id
+  };
+
+  //offerChangeHandler нужно доработать
+  #offerChangeHandler = () => {
+    const selectOffers = [];
+    Array.from(this.element.querySelectorAll('.event__offer-checkbox'))
+      .forEach((checkbox) => checkbox.checked ? selectOffers.push(mockOffers[Number(checkbox.dataset.id)]) : '');
+    this.updateElement({
+      offers: selectOffers,
+    });
+  };
+
+  #priceInputHandler = (evt) => {
+    evt.preventDefault();
+    const inputPrice = evt.target.value;
+
+    if (evt.target.value === '') {
+      evt.target.value = '0';
+    }
+    evt.target.value = isNaN(inputPrice) ? this._state.basePrice : inputPrice;
+    this._state.basePrice = evt.target.value;
+  };
+
+  #pointTypeChangeHandler = (evt) => {
+    evt.preventDefault();
+    const offers = this._state.type === evt.target.value ? this._state.offers : [];
+    this.updateElement({
+      type: evt.target.value,
+      offers,
+    });
+  };
+
+  #destinationChangeHandler = (evt) => {
+    if(!(DESTINATIONS.includes(evt.target.value))) {
+      return;
+    }
+    this.updateElement({
+      destination: DESTINATIONS.indexOf(evt.target.value),
+    });
+  };
 
   static parsePointToState(task) {
     return {...task};
@@ -160,20 +207,5 @@ export default class TripPointEditView extends AbstractStatefulView {
     return {...state};
   }
 
-  #eventTypeChangeHandler = (evt) =>
-  {
-    evt.preventDefault();
-    this.updateElement({
-      type: evt.target.value,
-      // offers: find
-    });
-  };
-
-  #eventDestinationChangeHandler = (evt) => {
-    evt.preventDefault();
-    this.updateElement({
-      destination: !this._state.destination
-    });
-  };
 
 }

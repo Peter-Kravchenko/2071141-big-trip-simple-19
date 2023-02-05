@@ -39,7 +39,7 @@ export default class TripPointPresenter {
     this.#tripPointEditComponent = new TripPointEditView (
       {tripPoint: this.#tripPoint,
         onFormSubmit: this.#handleFormSubmit,
-        onFormClose: this.#handleFormSubmit,
+        onFormClose: this.#handleFormClose,
       });
 
     if (prevTripPointComponent === null || prevTripPointEditComponent === null) {
@@ -97,6 +97,11 @@ export default class TripPointPresenter {
   #handleFormSubmit = (tripPoint) => {
     this.#handleDataChange(tripPoint);
     this.#replaceFormToPoint();
+  };
+
+  #handleFormClose = () => {
+    this.#replaceFormToPoint();
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
 }
