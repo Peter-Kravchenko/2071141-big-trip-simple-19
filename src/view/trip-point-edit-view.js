@@ -1,7 +1,12 @@
 import { OFFER_TYPES, DESTINATIONS } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { destinations, mockOffers, mockOffersByType} from '../mock/point.js';
-import { humanizeDate } from '../utils/point-utils';
+//import { humanizeDate } from '../utils/point-utils';
+//import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import dayjs from 'dayjs';
+
+const DATE_FORMAT = 'DD/MM/YY HH:mm';
 
 const createType = (currentType) => OFFER_TYPES.map((pointType) =>
   `<div class="event__type-item">
@@ -18,6 +23,9 @@ const createContentTemplate = (tripPoint) => {
   //console.log(type);
   //console.log(tripPoint);
   // console.log(destinations);
+
+  const parceDateStart = dayjs(dateFrom);
+  const parceDateEnd = dayjs(dateTo);
 
   const createDestinationNamesListTemplate = (selectedCity) => `
 <label class="event__label  event__type-output" for="event-destination-1">
@@ -71,11 +79,11 @@ const createContentTemplate = (tripPoint) => {
         ${destinationNamesListTemplate}
       </div>
       <div class="event__field-group  event__field-group--time">
-        <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDate(dateFrom)}">
+        <label class="visually-hidden" for="event-start-time">From</label>
+          <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${parceDateStart.format(DATE_FORMAT)}">
           &mdash;
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDate(dateTo)}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${parceDateEnd.format(DATE_FORMAT)}">
       </div>
       <div class="event__field-group  event__field-group--price">
         <label class="event__label" for="event-price-1">
@@ -117,6 +125,8 @@ export default class TripPointEditView extends AbstractStatefulView {
   #destination = null;
   #handleFormSubmit = null;
   handleFormClose = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({tripPoint, offers, destination, onFormSubmit, onFormClose}) {
     super();
@@ -130,6 +140,25 @@ export default class TripPointEditView extends AbstractStatefulView {
 
   get template() {
     return createContentTemplate(this._state);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  }
+
+  reset(tripPoint) {
+    this.updateElement(
+      TripPointEditView.parsePointToState(tripPoint),
+    );
   }
 
   _restoreHandlers() {
@@ -148,7 +177,7 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationChangeHandler);
 
-    // this.#setDatepicker();
+  // this.#setDatepicker();
   }
 
   #formSubmitHandler = (evt) => {
@@ -198,6 +227,40 @@ export default class TripPointEditView extends AbstractStatefulView {
       destination: DESTINATIONS.indexOf(evt.target.value),
     });
   };
+  //datepicker доработать
+  // #dateFromChangeHandler = ([userDate]) => {
+  //   this.updateElement({
+  //     dateFrom: userDate,
+  //   });
+  // };
+
+  // #dateToChangeHandler = ([userDate]) => {
+  //   this.updateElement({
+  //     dateTo: userDate,
+  //   });
+  // };
+
+  // #setDatepicker() {
+  //   this.#datepickerFrom = flatpickr(
+  //     this.element.querySelector('.event-start-time'),
+  //     {
+  //       dateFormat: 'd/m/y H:i',
+  //       enableTime: true,
+  //       defaultDate: this._state.dateFrom,
+  //       onChange: this.#dateFromChangeHandler,
+  //     },
+  //   );
+  //   this.#datepickerTo = flatpickr(
+  //     this.element.querySelector('.event-end-time'),
+  //     {
+  //       dateFormat: 'd/m/y H:i',
+  //       enableTime: true,
+  //       defaultDate: this._state.dateTo,
+  //       minDate: this._state.dateFrom,
+  //       onChange: this.#dateToChangeHandler,
+  //     },
+  //   );
+  // }
 
   static parsePointToState(task) {
     return {...task};
