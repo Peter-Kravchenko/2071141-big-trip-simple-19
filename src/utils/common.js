@@ -20,5 +20,3 @@ export const getRandomElements = (arr) => {
 };
 
 export const shuffleElements = (elements) => elements.sort(() => Math.random() - 0.5);
-
-export const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);

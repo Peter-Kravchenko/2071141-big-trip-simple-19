@@ -93,7 +93,7 @@ const createContentTemplate = (tripPoint) => {
         <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
       </div>
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Cancel</button>
+      <button class="event__reset-btn" type="reset">Delete</button>
       <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
       </button>
@@ -127,38 +127,21 @@ export default class TripPointEditView extends AbstractStatefulView {
   handleFormClose = null;
   #datepickerFrom = null;
   #datepickerTo = null;
+  #handleDeleteClick = null;
 
-  constructor({tripPoint, offers, destination, onFormSubmit, onFormClose}) {
+  constructor({tripPoint, offers, destination, onFormSubmit, onFormClose, onDeleteClick}) {
     super();
     this._setState(TripPointEditView.parsePointToState(tripPoint));
     this.#handleFormSubmit = onFormSubmit;
     this.handleFormClose = onFormClose;
     this.#offers = offers;
     this.#destination = destinations.find((item) => destination === item.id);
+    this.#handleDeleteClick = onDeleteClick;
     this._restoreHandlers();
   }
 
   get template() {
     return createContentTemplate(this._state);
-  }
-
-  removeElement() {
-    super.removeElement();
-
-    if (this.#datepickerFrom) {
-      this.#datepickerFrom.destroy();
-      this.#datepickerFrom = null;
-    }
-    if (this.#datepickerTo) {
-      this.#datepickerTo.destroy();
-      this.#datepickerTo = null;
-    }
-  }
-
-  reset(tripPoint) {
-    this.updateElement(
-      TripPointEditView.parsePointToState(tripPoint),
-    );
   }
 
   _restoreHandlers() {
@@ -176,6 +159,8 @@ export default class TripPointEditView extends AbstractStatefulView {
       .addEventListener('change', this.#pointTypeChangeHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__reset-btn')
+      .addEventListener('click', this.#deleteClickHandler);
 
   // this.#setDatepicker();
   }
@@ -227,6 +212,12 @@ export default class TripPointEditView extends AbstractStatefulView {
       destination: DESTINATIONS.indexOf(evt.target.value),
     });
   };
+
+  #deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(TripPointEditView.parseStateToPoint(this._state));
+  };
+
   //datepicker доработать
   // #dateFromChangeHandler = ([userDate]) => {
   //   this.updateElement({
@@ -261,6 +252,25 @@ export default class TripPointEditView extends AbstractStatefulView {
   //     },
   //   );
   // }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  }
+
+  reset(tripPoint) {
+    this.updateElement(
+      TripPointEditView.parsePointToState(tripPoint),
+    );
+  }
 
   static parsePointToState(task) {
     return {...task};
