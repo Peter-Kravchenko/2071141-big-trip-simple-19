@@ -5,6 +5,7 @@ import { destinations, mockOffers, mockOffersByType} from '../mock/point.js';
 //import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
+import he from 'he';
 
 const DATE_FORMAT = 'DD/MM/YY HH:mm';
 
@@ -19,10 +20,6 @@ const createPictures = (pictures) => pictures.map((picture) =>
 
 const createContentTemplate = (tripPoint) => {
   const {basePrice, destination, dateFrom, dateTo, type, offers} = tripPoint;
-  //console.log(offers);
-  //console.log(type);
-  //console.log(tripPoint);
-  // console.log(destinations);
 
   const parceDateStart = dayjs(dateFrom);
   const parceDateEnd = dayjs(dateTo);
@@ -31,7 +28,7 @@ const createContentTemplate = (tripPoint) => {
 <label class="event__label  event__type-output" for="event-destination-1">
     ${type}
     </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCity}" list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(selectedCity)}" list="destination-list-1">
     <datalist id="destination-list-1">
     ${DESTINATIONS.map((destinationCity) => `
     <option value="${destinationCity}" ${selectedCity === destinationCity ? 'selected' : ''}>`).join(' ')}

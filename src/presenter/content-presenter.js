@@ -5,22 +5,34 @@ import SortFormView from '../view/sort-form-view.js';
 import TripListView from '../view/trip-list-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import { UpdateType, UserAction } from '../const.js';
+import NewTripPointPresenter from './new-trip-point-presenter.js';
+
 
 export default class ContentPresenter {
   #filtersContainer = null;
   #mainContainer = null;
   #tripPointModel = null;
   #noPointComponent = new NoPointsView();
+  #newTripPointPresenter = null;
   #filtersComponent = new FiltersFormView();
   #sortFormComponent = new SortFormView();
   #tripListComponent = new TripListView();
+  #onNewPointDestroy = null;
+
 
   #tripPointsPresenter = new Map();
 
-  constructor ({filtersContainer, mainContainer, tripPointModel}) {
+  constructor ({filtersContainer, mainContainer, tripPointModel, onNewPointDestroy}) {
     this.#filtersContainer = filtersContainer;
     this.#mainContainer = mainContainer;
     this.#tripPointModel = tripPointModel;
+    this.#onNewPointDestroy = onNewPointDestroy;
+
+    this.#newTripPointPresenter = new NewTripPointPresenter({
+      pointListContainer: this.#tripListComponent.element,
+      onDataChange: this.#handleViewAction,
+      onDestroy: this.#onNewPointDestroy,
+    });
 
     this.#tripPointModel.addObserver(this.#handleModelEvent);
   }
@@ -33,6 +45,10 @@ export default class ContentPresenter {
   init = () => {
     this.#renderContentBoard();
   };
+
+  createPoint() {
+    this.#newTripPointPresenter.init();
+  }
 
   #renderFilter = () => {
     render(this.#filtersComponent, this.#filtersContainer);
@@ -47,6 +63,7 @@ export default class ContentPresenter {
       pointsListContainer: this.#tripListComponent.element,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
+      onDestroy: this.#onNewPointDestroy,
     });
     tripPointPresenter.init(tripPoint);
     this.#tripPointsPresenter.set(tripPoint.id, tripPointPresenter);
