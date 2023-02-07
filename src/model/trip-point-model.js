@@ -2,6 +2,14 @@ import Observable from '../framework/observable';
 
 export default class TripPointModel extends Observable {
   #points = [];
+  #pointsApiService = null;
+
+  constructor({pointsApiService}) {
+    super();
+    this.#pointsApiService = pointsApiService;
+
+   this.#pointsApiService.points.then((points)=>{console.log(points);});
+  }
 
   get points () {
     return this.#points;
