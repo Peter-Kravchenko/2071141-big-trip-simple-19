@@ -1,6 +1,5 @@
 import { OFFER_TYPES, DESTINATIONS } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { destinations, mockOffers, mockOffersByType} from '../mock/point.js';
 //import { humanizeDate } from '../utils/point-utils';
 //import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';

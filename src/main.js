@@ -1,5 +1,5 @@
 import { render } from './framework/render.js';
-import { getPoints } from './mock/point.js';
+//import { getPoints } from './mock/point.js';
 import TripPointModel from './model/trip-point-model.js';
 import PointsApiService from './points-api-service.js';
 import ContentPresenter from './presenter/content-presenter.js';
@@ -12,14 +12,13 @@ const END_POINT = 'https://19.ecmascript.pages.academy/big-trip-simple';
 const siteFilterElement = document.querySelector('.trip-controls');
 const siteContentElement = document.querySelector('.trip-events');
 const siteHeaderElement = document.querySelector('.trip-main');
-const points = getPoints();
+//const points = getPoints();
 
 
 const newTripPointBtnComponent = new NewTripPointBtnView({ onClick: handleNewTripPointBtnClick});
 const tripPointModel = new TripPointModel({
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
 });
-tripPointModel.init(points);
 const pointPresenter = new ContentPresenter({
   filtersContainer: siteFilterElement,
   mainContainer: siteContentElement,
@@ -36,4 +35,5 @@ function handleNewTripPointFormClose () {
 
 render (newTripPointBtnComponent, siteHeaderElement);
 
+tripPointModel.init();
 pointPresenter.init();
