@@ -1,26 +1,20 @@
-import { UpdateType, UserAction , OFFER_TYPES } from '../const.js';
+import { BLANK_POINT, UpdateType, UserAction } from '../const.js';
 import { remove, render, RenderPosition } from '../framework/render.js';
 import TripPointEditView from '../view/trip-point-edit-view.js';
 
-const BLANK_POINT = {
-  basePrice: 0,
-  dateFrom: new Date(),
-  dateTo: new Date(),
-  destination: 0,
-  id:0,
-  offers: [],
-  type: OFFER_TYPES[0]
-};
-
 export default class NewTripPointPresenter {
   #pointListContainer = null;
+  #offers = null;
+  #destinations = null;
   #handleDataChange = null;
   #handleDestroy = null;
 
   #pointEditComponent = null;
 
-  constructor({pointListContainer, onDataChange, onDestroy}) {
+  constructor({pointListContainer, offers , destinations, onDataChange, onDestroy}) {
     this.#pointListContainer = pointListContainer;
+    this.#offers = offers;
+    this.#destinations = destinations;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
   }
@@ -31,10 +25,11 @@ export default class NewTripPointPresenter {
     }
 
     this.#pointEditComponent = new TripPointEditView({
-      tripPoint: BLANK_POINT,
+      tripPoint: this.#pointListContainer,
+      pointOffers: this.#offers,
+      pointDestinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
-
     });
 
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
@@ -55,11 +50,30 @@ export default class NewTripPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  #handleFormSubmit = (point) => {
+  setSaving() {
+    this.#pointEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointEditComponent.shake(resetFormState);
+  }
+
+  #handleFormSubmit = (tripPoint) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      point,
+      tripPoint,
     );
   };
 

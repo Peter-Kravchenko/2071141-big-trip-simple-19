@@ -6,7 +6,7 @@ import ContentPresenter from './presenter/content-presenter.js';
 import NewTripPointBtnView from './view/new-trip-point-btn-view.js';
 
 
-const AUTHORIZATION = 'Basic nevergonnagiveyouup';
+const AUTHORIZATION = 'Basic vdddjdjiiolm';
 const END_POINT = 'https://19.ecmascript.pages.academy/big-trip-simple';
 
 const siteFilterElement = document.querySelector('.trip-controls');

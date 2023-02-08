@@ -1,17 +1,5 @@
 export const OFFER_TYPES = ['taxi','bus','train','ship','drive','flight','check-in', 'sightseeing','restaurant'];
 
-export const OFFERS_TITLE = ['Add luggage', 'Choose seats', 'Add meal', 'Comfort class', 'Business class'];
-
-export const DESTINATIONS = ['Chamonix', 'Amsterdam', 'Rome', 'Madrid', 'Geneva'];
-
-export const DESCRIPTIONS = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  'Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
-  'Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.'
-];
-
-export const TRIP_POINT_ITEMS = 20;
-
 export const FILTER_TYPES = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -32,4 +20,15 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
+};
+
+export const BLANK_POINT = {
+  basePrice: 0,
+  dateFrom: new Date(),
+  dateTo: new Date(),
+  destination: 0,
+  id:0,
+  offers: [],
+  type: OFFER_TYPES[0]
 };
