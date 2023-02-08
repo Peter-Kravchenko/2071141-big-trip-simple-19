@@ -109,8 +109,7 @@ export default class ContentPresenter {
 
   };
 
-  #clearBoard = (/*{resetSortType = false} = {}*/) => {
-    // this.#tripPointNewPresenter.destroy();
+  #clearBoard = () => {
     this.#tripPointsPresenter.forEach((presenter) => presenter.destroy());
     this.#tripPointsPresenter.clear();
 
@@ -120,8 +119,6 @@ export default class ContentPresenter {
     if(this.#noPointComponent) {
       remove(this.#noPointComponent);
     }
-    // if (resetSortType) {
-    //   this.#currentSortType = SORT_TYPES.DATE;
   };
 
   #renderNoPoints = () => {

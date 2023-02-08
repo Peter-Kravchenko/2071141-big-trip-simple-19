@@ -1,10 +1,8 @@
 import {BLANK_POINT } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-//import { humanizeDate } from '../utils/point-utils';
-//import flatpickr from 'flatpickr';
+
 import 'flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
-//import he from 'he';
 
 const DATE_FORMAT = 'DD/MM/YY HH:mm';
 
@@ -22,7 +20,6 @@ const createContentTemplate = (tripPoint, pointOffers, pointDestinations, destin
   <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-${destination}">${pointType}</label>
   </div>`).join('');
 
-
   const createDestinationNamesListTemplate = (selectedCity) => {
     const cityName = pointDestinations.find((city) => city.id === selectedCity);
 
@@ -36,7 +33,6 @@ const createContentTemplate = (tripPoint, pointOffers, pointDestinations, destin
     <option value="${destinationCity}" ${cityName && cityName.name === destinationCity ? 'selected' : ''}>`).join(' ')}
     </datalist>`;
   };
-
 
   const destinationNamesListTemplate = createDestinationNamesListTemplate(destination);
 
@@ -126,7 +122,7 @@ const createContentTemplate = (tripPoint, pointOffers, pointDestinations, destin
 
 export default class TripPointEditView extends AbstractStatefulView {
   #tripPoint = null;
-  #pointOffers = null;
+  #pointOffers = [];
   #pointDestinations = null;
   #handleFormSubmit = null;
   handleFormClose = null;
@@ -138,11 +134,11 @@ export default class TripPointEditView extends AbstractStatefulView {
   constructor({tripPoint = BLANK_POINT, pointOffers, pointDestinations, onFormSubmit, onFormClose, onDeleteClick}) {
     super();
     this._setState(TripPointEditView.parsePointToState(tripPoint));
-    this.#handleFormSubmit = onFormSubmit;
-    this.handleFormClose = onFormClose;
     this.#pointOffers = pointOffers;
     this.#pointDestinations = pointDestinations;
     this.#destinationsCityList = this.#pointDestinations.map((city) => city.name);
+    this.#handleFormSubmit = onFormSubmit;
+    this.handleFormClose = onFormClose;
     this.#handleDeleteClick = onDeleteClick;
     this._restoreHandlers();
   }
@@ -169,7 +165,6 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn')
       .addEventListener('click', this.#deleteClickHandler);
 
-  // this.#setDatepicker();
   }
 
   #formSubmitHandler = (evt) => {
@@ -181,7 +176,6 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.handleFormClose(this.#tripPoint);
   };
 
-  //offerChangeHandler нужно доработать
   #offerChangeHandler = () => {
     const selectOffers = [];
     Array.from(this.element.querySelectorAll('.event__offer-checkbox'))
@@ -229,41 +223,6 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.#handleDeleteClick(TripPointEditView.parseStateToPoint(this._state));
   };
 
-  //datepicker доработать
-  // #dateFromChangeHandler = ([userDate]) => {
-  //   this.updateElement({
-  //     dateFrom: userDate,
-  //   });
-  // };
-
-  // #dateToChangeHandler = ([userDate]) => {
-  //   this.updateElement({
-  //     dateTo: userDate,
-  //   });
-  // };
-
-  // #setDatepicker() {
-  //   this.#datepickerFrom = flatpickr(
-  //     this.element.querySelector('.event-start-time'),
-  //     {
-  //       dateFormat: 'd/m/y H:i',
-  //       enableTime: true,
-  //       defaultDate: this._state.dateFrom,
-  //       onChange: this.#dateFromChangeHandler,
-  //     },
-  //   );
-  //   this.#datepickerTo = flatpickr(
-  //     this.element.querySelector('.event-end-time'),
-  //     {
-  //       dateFormat: 'd/m/y H:i',
-  //       enableTime: true,
-  //       defaultDate: this._state.dateTo,
-  //       minDate: this._state.dateFrom,
-  //       onChange: this.#dateToChangeHandler,
-  //     },
-  //   );
-  // }
-
   removeElement() {
     super.removeElement();
 
@@ -290,6 +249,5 @@ export default class TripPointEditView extends AbstractStatefulView {
   static parseStateToPoint(state) {
     return {...state};
   }
-
 
 }

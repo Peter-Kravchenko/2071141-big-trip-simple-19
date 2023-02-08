@@ -25,7 +25,7 @@ export default class NewTripPointPresenter {
     }
 
     this.#pointEditComponent = new TripPointEditView({
-      tripPoint: this.#pointListContainer,
+      tripPoint: BLANK_POINT,
       pointOffers: this.#offers,
       pointDestinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
